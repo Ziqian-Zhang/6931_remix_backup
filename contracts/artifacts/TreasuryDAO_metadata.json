@@ -14,6 +14,16 @@
 					},
 					{
 						"internalType": "address",
+						"name": "oracle",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "aavePool",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
 						"name": "initialOwner",
 						"type": "address"
 					}
@@ -139,10 +149,47 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"name": "checkUpkeep",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "upkeepNeeded",
+						"type": "bool"
+					},
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "deposit",
 				"outputs": [],
 				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "depositToAave",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -173,10 +220,36 @@
 			},
 			{
 				"inputs": [],
+				"name": "getETHPrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "governanceToken",
 				"outputs": [
 					{
 						"internalType": "contract IERC20",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "lendingPool",
+				"outputs": [
+					{
+						"internalType": "contract IPool",
 						"name": "",
 						"type": "address"
 					}
@@ -232,6 +305,19 @@
 			{
 				"inputs": [
 					{
+						"internalType": "bytes",
+						"name": "performData",
+						"type": "bytes"
+					}
+				],
+				"name": "performUpkeep",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
@@ -257,6 +343,11 @@
 					{
 						"internalType": "uint256",
 						"name": "endTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "unlockTime",
 						"type": "uint256"
 					},
 					{
@@ -318,6 +409,19 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "withdrawFromAave",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -338,6 +442,12 @@
 				"owner()": {
 					"details": "Returns the address of the current owner."
 				},
+				"performUpkeep(bytes)": {
+					"details": "The input to this method should not be trusted, and the caller of the method should not even be restricted to any single registry. Anyone should be able call it, and the input should be validated, there is no guarantee that the data passed in is the performData returned from checkUpkeep. This could happen due to malicious keepers, racing keepers, or simply a state change while the performUpkeep transaction is waiting for confirmation. Always validate the data passed in.",
+					"params": {
+						"performData": "is the data which was passed back from the checkData simulation. If it is encoded, it can easily be decoded into other types by calling `abi.decode`. This data should not be trusted, and should be validated against the contract's current state."
+					}
+				},
 				"renounceOwnership()": {
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
 				},
@@ -349,7 +459,11 @@
 		},
 		"userdoc": {
 			"kind": "user",
-			"methods": {},
+			"methods": {
+				"performUpkeep(bytes)": {
+					"notice": "method that is actually executed by the keepers, via the registry. The data returned by the checkUpkeep simulation will be passed into this method to actually be executed."
+				}
+			},
 			"version": 1
 		}
 	},
@@ -369,6 +483,54 @@
 		"remappings": []
 	},
 	"sources": {
+		"@aave/core-v3/contracts/interfaces/IPool.sol": {
+			"keccak256": "0xbfd2077251c8dc766a56d45f4b03eb07f3441323e79c0f794efea3657a99747f",
+			"license": "AGPL-3.0",
+			"urls": [
+				"bzz-raw://c6ff6221de0ea877932c73c0b99d3e4535f293053ae44f9f9d6b9d265e9af2f6",
+				"dweb:/ipfs/QmSTaEKrhz1xNVnx4oBzWw8DenYPShVzJoP1A9GTEWkAzX"
+			]
+		},
+		"@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol": {
+			"keccak256": "0x33d4308d9407b4ee2297fc4ba5acce1a96a6c658189e2778a4f6b90e032fb3b5",
+			"license": "AGPL-3.0",
+			"urls": [
+				"bzz-raw://978336a2a40229ccc7749344be890862ea12e17e9fffe5bb977ba3841de07b5a",
+				"dweb:/ipfs/QmScNrQfDSPg1afJmkCty6fZkETUrWTmEXWeTmHoe7mSqa"
+			]
+		},
+		"@aave/core-v3/contracts/protocol/libraries/types/DataTypes.sol": {
+			"keccak256": "0x771cb99fd8519c974f7e12130387c4d9a997a6e8d0ac10e4303b842fe53efa88",
+			"license": "BUSL-1.1",
+			"urls": [
+				"bzz-raw://0f41689d1d58bc13678c749bae8830f5a8b19b89cd135e962bf07d483350f828",
+				"dweb:/ipfs/QmQSNGDxjYGqT1GU2CZzsWUTNcAtcfkg1jDGTH516nCAfN"
+			]
+		},
+		"@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol": {
+			"keccak256": "0xfe4e8bb4861bb3860ba890ab91a3b818ec66e5a8f544fb608cfcb73f433472cd",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://644cff84052e1e82b5bb502b2a46e8f142a62b0db4cd9b38200798ba8373c6f7",
+				"dweb:/ipfs/QmTa99QHrJBn3SXDizquPBUiTxVCNKQrHgaWJhuds5Sce2"
+			]
+		},
+		"@chainlink/contracts/src/v0.8/interfaces/AutomationCompatibleInterface.sol": {
+			"keccak256": "0x67076747c6f66d8d43472a56e72879c350056bff82e069addaf9064922863340",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b738dba680a6fbc4afc85819743f13f5b7f4790ec8634c9894e1160327b11b6e",
+				"dweb:/ipfs/Qmbv3euvQppeBm2g61khcJSRMZWi78xUWzbnjKAvDBnka4"
+			]
+		},
+		"@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol": {
+			"keccak256": "0xac76a31c20c6d66196247376d113a0f19229569ab8c123989649d50be3333e0a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://5400532a5132536ba3d1172604291298f1595f15d7a7f66c95bf89a5823b80be",
+				"dweb:/ipfs/QmTvDMmt73kZEGjD9WVgpaN8xLsgGpoXmr2yVUQoQuv8GW"
+			]
+		},
 		"@openzeppelin/contracts/access/Ownable.sol": {
 			"keccak256": "0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb",
 			"license": "MIT",
@@ -394,11 +556,11 @@
 			]
 		},
 		"contracts/TreasuryDAO.sol": {
-			"keccak256": "0x86eb14edf51740ee83c03daca89c4b4d50154b7f01c6432f5685228699faa738",
+			"keccak256": "0xb3f7575a2603ba26cee92b6e25eb4265df83f6fec24baced987b8884b9513dba",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b1512d0d6dd96feec77247ea8e64c3a17145477d7972971f7f4183a1164f2762",
-				"dweb:/ipfs/QmVViDMC51dcdXDFY25Jyq3qkxyvBxBJ3tXqnsPv2CtYRi"
+				"bzz-raw://95835b850326cbf71f40aeee341bda703165c98a30ee26919d47077e5be6b29b",
+				"dweb:/ipfs/QmNtntwhcAP64fZyYKqfxHQApxTTusKK2w8m8ivgoKPK9z"
 			]
 		}
 	},
