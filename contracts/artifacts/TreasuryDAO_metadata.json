@@ -14,12 +14,12 @@
 					},
 					{
 						"internalType": "address",
-						"name": "oracle",
+						"name": "priceFeedAddress",
 						"type": "address"
 					},
 					{
 						"internalType": "address",
-						"name": "aavePool",
+						"name": "lendingPoolAddress",
 						"type": "address"
 					},
 					{
@@ -30,6 +30,11 @@
 				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "OnlySimulatedBackend",
+				"type": "error"
 			},
 			{
 				"inputs": [
@@ -52,6 +57,19 @@
 				],
 				"name": "OwnableUnauthorizedAccount",
 				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "proposalId",
+						"type": "uint256"
+					}
+				],
+				"name": "FundsReleased",
+				"type": "event"
 			},
 			{
 				"anonymous": false,
@@ -165,7 +183,7 @@
 					},
 					{
 						"internalType": "bytes",
-						"name": "",
+						"name": "performData",
 						"type": "bytes"
 					}
 				],
@@ -249,7 +267,7 @@
 				"name": "lendingPool",
 				"outputs": [
 					{
-						"internalType": "contract IPool",
+						"internalType": "contract IAaveLendingPool",
 						"name": "",
 						"type": "address"
 					}
@@ -346,14 +364,14 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "uint256",
-						"name": "unlockTime",
-						"type": "uint256"
-					},
-					{
 						"internalType": "bool",
 						"name": "executed",
 						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "unlockTime",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -373,6 +391,19 @@
 					}
 				],
 				"name": "proposeFunding",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "proposalId",
+						"type": "uint256"
+					}
+				],
+				"name": "releaseFunds",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -483,28 +514,20 @@
 		"remappings": []
 	},
 	"sources": {
-		"@aave/core-v3/contracts/interfaces/IPool.sol": {
-			"keccak256": "0xbfd2077251c8dc766a56d45f4b03eb07f3441323e79c0f794efea3657a99747f",
-			"license": "AGPL-3.0",
+		"@chainlink/contracts/src/v0.8/AutomationBase.sol": {
+			"keccak256": "0x5d354afa1a97dffe66094397cdcbb0c14713cf3d609d88fd8f9891010e9a351a",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://c6ff6221de0ea877932c73c0b99d3e4535f293053ae44f9f9d6b9d265e9af2f6",
-				"dweb:/ipfs/QmSTaEKrhz1xNVnx4oBzWw8DenYPShVzJoP1A9GTEWkAzX"
+				"bzz-raw://3613ee132e1f05b3e23955db6a849966487fab8ea33e9bb70d6f038fc48c0608",
+				"dweb:/ipfs/QmRgdumWFMX35vSrZpCCvXDTvRBVXRkexnxoZqqfnGisnZ"
 			]
 		},
-		"@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol": {
-			"keccak256": "0x33d4308d9407b4ee2297fc4ba5acce1a96a6c658189e2778a4f6b90e032fb3b5",
-			"license": "AGPL-3.0",
+		"@chainlink/contracts/src/v0.8/AutomationCompatible.sol": {
+			"keccak256": "0x40e5ae0eff4edd0740c1b5590d09c344f84dee031e82d5294563e99603774f80",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://978336a2a40229ccc7749344be890862ea12e17e9fffe5bb977ba3841de07b5a",
-				"dweb:/ipfs/QmScNrQfDSPg1afJmkCty6fZkETUrWTmEXWeTmHoe7mSqa"
-			]
-		},
-		"@aave/core-v3/contracts/protocol/libraries/types/DataTypes.sol": {
-			"keccak256": "0x771cb99fd8519c974f7e12130387c4d9a997a6e8d0ac10e4303b842fe53efa88",
-			"license": "BUSL-1.1",
-			"urls": [
-				"bzz-raw://0f41689d1d58bc13678c749bae8830f5a8b19b89cd135e962bf07d483350f828",
-				"dweb:/ipfs/QmQSNGDxjYGqT1GU2CZzsWUTNcAtcfkg1jDGTH516nCAfN"
+				"bzz-raw://24a134c3bea2e8a6ed29f109e422a9bafb3f43523235188618cf016ed86fafc8",
+				"dweb:/ipfs/QmPUGoVde38kbteT358jsskzh5spoJtUoaNZ8UJWVqP3im"
 			]
 		},
 		"@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol": {
@@ -521,14 +544,6 @@
 			"urls": [
 				"bzz-raw://b738dba680a6fbc4afc85819743f13f5b7f4790ec8634c9894e1160327b11b6e",
 				"dweb:/ipfs/Qmbv3euvQppeBm2g61khcJSRMZWi78xUWzbnjKAvDBnka4"
-			]
-		},
-		"@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol": {
-			"keccak256": "0xac76a31c20c6d66196247376d113a0f19229569ab8c123989649d50be3333e0a",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://5400532a5132536ba3d1172604291298f1595f15d7a7f66c95bf89a5823b80be",
-				"dweb:/ipfs/QmTvDMmt73kZEGjD9WVgpaN8xLsgGpoXmr2yVUQoQuv8GW"
 			]
 		},
 		"@openzeppelin/contracts/access/Ownable.sol": {
@@ -556,11 +571,11 @@
 			]
 		},
 		"contracts/TreasuryDAO.sol": {
-			"keccak256": "0xb3f7575a2603ba26cee92b6e25eb4265df83f6fec24baced987b8884b9513dba",
+			"keccak256": "0x34d6adfd91d604132d8a3357bd8fa0672041c0dbb0ddd5450c30b8026d21818a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://95835b850326cbf71f40aeee341bda703165c98a30ee26919d47077e5be6b29b",
-				"dweb:/ipfs/QmNtntwhcAP64fZyYKqfxHQApxTTusKK2w8m8ivgoKPK9z"
+				"bzz-raw://2459b2d5da40e126e88092c11bc6fa46656c1bf17681344420fe5c296b962a52",
+				"dweb:/ipfs/QmSeZWqRWA72us4p1knJoNPzLLfuyn3VHprXEk1znyKjgj"
 			]
 		}
 	},
