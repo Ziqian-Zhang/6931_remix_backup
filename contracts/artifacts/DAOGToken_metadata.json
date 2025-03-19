@@ -616,7 +616,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/DAOGToken.sol": "DAOGToken"
+			"contracts/DAOGTokenTest.sol": "DAOGToken"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -702,12 +702,12 @@
 				"dweb:/ipfs/QmPFKL2r9CBsMwmUqqdcFPfHZB2qcs9g1HDrPxzWSxomvy"
 			]
 		},
-		"contracts/DAOGToken.sol": {
-			"keccak256": "0x71c6ace12bd13bde3802c1199b3e883e4bde19685809efec0b73d5c66aa42817",
+		"contracts/DAOGTokenTest.sol": {
+			"keccak256": "0x14104bfcc552d0c7a1bb61c2c32a4265eb71c8308e681bcfd141c6275061fec6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://883a62903797e5249f8651cd4f18b908462e37cbcb7516661a401adb5212a4a6",
-				"dweb:/ipfs/QmStNywHr4PKGARLjNovD3Cea6QV2mK8DvtNryggvh5bRp"
+				"bzz-raw://0581f4388bf48133ef0483c41f5a9600e17f0441706b6a92647fdc8c9ba9c4ab",
+				"dweb:/ipfs/QmVNQVCjz8ZvMcZiVw1GGtbrGQKN2QuRMZ7m9NSXNe9ruC"
 			]
 		}
 	},

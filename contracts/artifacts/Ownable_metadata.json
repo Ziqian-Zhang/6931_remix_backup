@@ -119,7 +119,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/GovernanceToken_flattened.sol": "Ownable"
+			"contracts/TreasuryDAOTest_flattened.sol": "Ownable"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -133,12 +133,11 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/GovernanceToken_flattened.sol": {
-			"keccak256": "0xb605fba13df8ddb1908ea065ac4437e288f080474fa678bf218e662ab1469aa6",
-			"license": "MIT",
+		"contracts/TreasuryDAOTest_flattened.sol": {
+			"keccak256": "0x046bb97491b19b970334ce560a14529fb88e45eec525f9bd830b88248691cc40",
 			"urls": [
-				"bzz-raw://774e31b65aa218b901cba41bd46cdb66a558261063ee4cbc57c260997667c81f",
-				"dweb:/ipfs/QmNd1KJFPitCDEarhrP69rAoKnvPbTukmTZVrUnhT8ahoB"
+				"bzz-raw://806ffcb5d0ed05e4fa9b809e2e83f72195c3b3b991d1d0931aedd6021264bfce",
+				"dweb:/ipfs/QmYTxmfNcxFpXnKDBZNmiXNsD7kYYrN6GFNwLdWnn9yAip"
 			]
 		}
 	},
